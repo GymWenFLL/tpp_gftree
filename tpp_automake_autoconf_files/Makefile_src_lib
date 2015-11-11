@@ -1,0 +1,22 @@
+CC = gcc
+SOURCE = add.c db.c fwbug.c hwbug.c mov.c swbug.c fatalbug.c
+SLIPSRC = slip/slhc.c slip/slip.c slip/slip.h slip/slipConfig.h slip/slipProtoChars.h
+
+all:
+	make add.c
+	make db.c
+	make fwbug.c
+	make hwbug.c
+	make mov.c
+	make swbug.c
+	make lnall
+
+*.c:
+	$(CC) $_
+
+*.h:
+	$(CC) $_
+
+lnall:
+	$(CC) -o libTelephoneInterface.so $(SOURCE) $(SLIPSRC)
+	$(CC) -o fwlib.drv $(SOURCE)

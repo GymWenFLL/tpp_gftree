@@ -1,0 +1,40 @@
+#!/bin/bash
+
+function info {
+	echo "[INFO] $(1)"
+}
+
+function warning {
+	echo "[WARN] $(1)"
+}
+
+function error {
+	echo "[ERROR] $(1)"
+}
+
+function remove {
+	if [ -e $1 ]
+	then
+		rm $1
+	fi
+}
+
+function tree {
+	ls -R $1 | grep ':$' | sed -e 's/:$//' -e 's/[^\/]*\//|  /g' -e 's/|  \([^|]\)/`--\1/g'
+}
+
+function lookForUpdatesInGit {
+	cd $1
+	if git diff-index --quiet HEAD --; then
+		# no changes
+		info "No Update found for $(1)"
+	else
+		# changes
+		info "Update found for $(1), fetch it..."
+		git pull
+	fi
+	cd ..
+}
+
+info "UpdateRepo v1.0"
+

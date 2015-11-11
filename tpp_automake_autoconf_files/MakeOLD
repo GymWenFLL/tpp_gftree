@@ -1,0 +1,51 @@
+ASM = nasm -aS
+CC = gcc
+CPP = c++
+LD = ld -S
+CFLAGS = -O2 -ffreestanding
+
+help:
+	@echo make all - Makes everything
+
+all:
+	make lib
+	make fw
+	make software
+	make liblink
+
+*.c:
+	$(CC) $(CFLAGS) $_
+
+*.h:
+	$(CC) $(CFLAGS) $_
+
+*.cpp:
+	$(CPP) $(CFLAGS) $_
+
+*.asm:
+	$(ASM) $_
+
+lib:
+	make lib/add.c
+	make lib/db.c
+	make lib/fwbug.c
+	make lib/hwbug.c
+	make lib/mov.c
+	make slip
+
+slip:
+	make -f lib/slip/Makefile all
+
+software:
+	make software/conndef.h
+	make software/connInit.c
+
+fw:
+	cd kernel && make
+
+liblink:
+	@echo int slip;
+	@echo int slip; >> tmp.h
+	@echo slip = 1;
+	@echo slip = 1; >> tmp.h
+	$(CC) -o tmp.h lib/add.c lib/db.c lib/fwbug.c lib/hwbug.c lib/mov.c

@@ -1,0 +1,78 @@
+#!/bin/bash
+
+function info {
+	echo "[INFO] $1"
+}
+
+function warning {
+	echo "[WARN] $1"
+}
+
+function error {
+	echo "[ERROR] $1"
+}
+
+function remove {
+	if [ -e $1 ]
+	then
+		rm $1
+	fi
+}
+
+info "FetchRepo v1.0"
+
+function folderlook {
+	if [ -e $1 ]
+	then
+		info "$(1) is present. Deleting Contents of folder."
+		rm $(1)/*
+	else
+		info "$1 is not present... creating it!"
+		mkdir $1
+	fi
+}
+
+info "Make sure, that you have saved all of your work! It will be deleted forever."
+
+info "Are the folders already present?"
+folderlook scripts/
+folderlook src/
+folderlook src/fw/
+folderlook src/lib/
+folderlook src/lib/slip/
+folderlook software/
+
+info "Fetching Source-Code and install it..."
+git clone https://github.com/GymWenFLL/tpp_android_fetch_src
+git clone https://github.com/GymWenFLL/tpp_lib_src_insert
+git clone https://github.com/GymWenFLL/tpp_software_src_insert
+git clone https://github.com/GymWenFLL/tpp_fw_src_insert
+git clone https://github.com/GymWenFLL/tpp_helper_scripts_for_repo
+git clone https://github.com/GymWenFLL/tpp_automake_autoconf_files
+git clone https://github.com/GymWenFLL/tpp_scripts_to_install
+git clone https://github.com/GymWenFLL/tpp_lib_slip_src_insert
+
+mv tpp_scripts_to_install/* scripts/
+mv tpp_helper_scripts_for_repo/* ./
+mv tpp_fw_src_insert/* src/fw/
+mv tpp_android_fetch_src/* src/fw/
+mv tpp_lib_src_insert/* src/lib/
+mv tpp_lib_slip_src_insert/* src/lib/slip/
+mv tpp_software_src_insert/* src/software/
+mv tpp_automake_autoconf_files/Makefile_scripts.am scripts/Makefile.am
+mv tpp_automake_autoconf_files/Makefile_src.am src/Makefile.am
+mv tpp_automake_autoconf_files/Makefile_src_fw.am src/fw/Makefile.am
+mv tpp_automake_autoconf_files/Makefile_src_lib src/lib/Makefile
+mv tpp_automake_autoconf_files/Makefile_src_lib_slip src/lib/slip/Makefile
+mv tpp_automake_autoconf_files/Makefile_top.am ./Makefile.am
+
+info "Work finished! cleaning up..."
+rm -r tpp_android_fetch_src
+rm -r tpp_automake_autoconf_files
+rm -r tpp_fw_src_insert
+rm -r tpp_helper_scripts_for_repo
+rm -r tpp_lib_slip_src_insert
+rm -r tpp_lib_src_insert
+rm -r tpp_software_src_insert
+rm -r tpp_scripts_to_install
+

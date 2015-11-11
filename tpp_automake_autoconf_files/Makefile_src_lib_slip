@@ -1,0 +1,18 @@
+CC = gcc
+
+all:
+	make slipProtoChars.h
+	make slipConfig.h
+	make slhc.c
+	make slip.c
+	make slip.h
+	make lnalltodrv
+
+*.c:
+	$(CC) $_
+
+*.h:
+	$(CC) $_
+
+lnalltodrv:
+	$(CC) -o slip.drv slip.c slip.h slhc.c slipConfig.h slipProtoChars.h

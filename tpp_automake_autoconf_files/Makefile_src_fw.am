@@ -1,0 +1,56 @@
+#Makefile.am - Information-file for Makefile
+#
+#This file is part of teampcphone.
+#
+#Copyright (C) 2015  Dario Dorando
+#
+#teampcphone is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+SUBDIRS = android
+
+AM_CXXFLAGS = $(INTI_CFLAGS)
+
+firmware_LDADD = $(INTI_LIBS)
+
+if [ -e android/ ] then
+	@echo Found Android Source Code.
+else
+	echo Haven't found Android Source Code. We have to fetch it to continue!
+	./fetchAndroidSrc.sh
+fi
+
+if [ -e android/src/version._acc ] then
+	@echo Validated Android Source Code
+	@echo Android Version:
+	@more android/src/version._acc
+else
+	@echo Android Source Code is not valid, refetch.
+	rm -r android/
+	./fetchAndroidSrc.sh 2
+fi
+
+if [ -e /bin/java ] then
+	@echo Found Java in /bin
+else
+	@echo Haven't found Java in /bin... looking further.
+	if [ -e /usr/bin/java ] then
+		@echo Found Java in /usr/bin
+	else
+		@echo Haven't found Java in /usr/bin... Error!
+		exit 3
+	fi
+fi
+
+if [ -e android/ ] then
+	./buildAndroid.sh
